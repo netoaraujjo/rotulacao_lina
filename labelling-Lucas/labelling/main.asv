@@ -1,0 +1,61 @@
+clear; close all; clc;
+
+tic
+%% Base de Dados %%
+% DB = Base de dados
+% C  = número de clusters previamente indicado para a base de dados
+[BD, C] = carregar_bd('glass');
+[BDQ, medias] = quantizar(BD(:,2:size(BD,2)), 'medias');
+BDQ = [BD(:,1) BDQ];
+
+N = 2; % número de iterações por atributo
+disp('# Médias de Redes Neurais: ' num2str(N));
+
+%% Clusterização %%
+[clusters, BDC] = agrupar('k-means', BD, C);
+
+%% Rede Neural %%
+for i=1:C    
+    cluster = clusters.(['c',int2str(i)]).('elementos');
+    for n=1:N
+        [treinamento, teste] = tr_ts(cluster, 0.8);
+        iteracoes.(['c',int2str(i)]).(['i',int2str(n)]).('txs_acerto') = [];
+        % exceto a primeira coluna (index)
+        for j=2:size(cluster, 2)
+            [obtido, desejado] = treinar('rna', j, treinamento, teste);
+            iteracoes.(['c',int2str(i)]).(['i',int2str(n)]).('txs_acerto') = [iteracoes.(['c',int2str(i)]).(['i',int2str(n)]).('txs_acerto') taxa_acerto(obtido, desejado, medias)];
+        end
+    end
+    
+    clusters.(['c',int2str(i)]).('txs_acerto') = medias_acerto(iteracoes.(['c',int2str(i)]), i, N);
+end
+
+%% Rotulação %%
+rotular(clusters, C, 15);
+
+t = toc;
+
+disp('_____________________________________________________________________________');
+disp(['Tempo de execução: ' num2str(t) ' segundos.']);
+
+%% OBSERVAÇÕES %%
+
+% 0 %
+% O range do atributo será o do que mais aparece no grupo ou 
+% do que foi mais acertado?
+
+% 1 %
+% Testar iniciar a rede só com pesos aleatórios positivos - em alguns casos
+% a rede resulta em saídas negativas, no caso de uma base não utilizar tais
+% valores, avaliar os resultados com pesos iniciais aleatórios > 0.
+
+% 2 %
+% Quando normalizar? o banco todo? após definir cada conjunto de
+% treinamento? isso influencia?
+
+% 3 %
+% Testar com mais de uma saída
+
+% 4 %
+% Testar diminuir o erro da rede neural, para ver se tem maior taxa de
+% acerto, já que se trabalha com muitas casas decimais.
