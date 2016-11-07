@@ -1,0 +1,265 @@
+function [clusters, BDC] = agrupar(metodo, BD, C)
+
+switch metodo
+    case 'k-means'
+        disp('# Tipo de agrupamento: K-Means');
+        % ignora-se a primeira coluna (index) na etapa de clusterização
+        [result] = kmeans(BD(:,2:size(BD,2)), C);
+        
+        % adiciona o resultado da clusterização em cada elemento da base de dados
+        BDC = [BD result];
+
+        clusters = [];
+        for i=1:C
+            clusters.(['c',int2str(i)]).('elementos') = [];
+            for j=1:size(BDC, 1)
+                if BDC(j, size(BDC,2)) == i
+                    clusters.(['c',int2str(i)]).('elementos') = [clusters.(['c',int2str(i)]).('elementos'); BDC(j,1:(size(BDC,2)-1))];
+                end
+            end
+            disp(['     Cluster ' num2str(i) ': ' num2str(size(clusters.(['c',int2str(i)]).('elementos'), 1)) ' elementos']);
+            disp(['          - Elementos: ' num2str()]);
+        end
+        clusters.('atributos') = {
+            'RI', 'Na', 'Mg', 'Al', 'Si', 'K ', 'Ca', 'Ba', 'Fe'
+        };
+        
+    case 'glass-o'
+        disp('* Tipo de agrupamento: Ótimo');
+        result = [
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            1;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            2;
+            3;
+            3;
+            3;
+            3;
+            3;
+            3;
+            3;
+            3;
+            3;
+            3;
+            3;
+            3;
+            3;
+            3;
+            3;
+            3;
+            3;
+            5;
+            5;
+            5;
+            5;
+            5;
+            5;
+            5;
+            5;
+            5;
+            5;
+            5;
+            5;
+            5;
+            6;
+            6;
+            6;
+            6;
+            6;
+            6;
+            6;
+            6;
+            6;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+            4;
+        ];
+        BDC = [BD result];
+
+        clusters = [];
+        for i=1:C
+            clusters.(['c',int2str(i)]).('elementos') = [];
+            for j=1:size(BDC, 1)
+                if BDC(j, size(BDC,2)) == i
+                    clusters.(['c',int2str(i)]).('elementos') = [clusters.(['c',int2str(i)]).('elementos'); BDC(j,1:(size(BDC,2)-1))];
+                end
+            end
+            disp(['     Cluster ' num2str(i) ': ' num2str(size(clusters.(['c',int2str(i)]).('elementos'), 1)) ' elementos']);
+        end
+        clusters.('atributos') = {
+            'RI', 'Na', 'Mg', 'Al', 'Si', 'K ', 'Ca', 'Ba', 'Fe'
+        };
+    
+    otherwise
+        disp('* Tipo de agrupamento inválido!');
+        clusters = -1;
+        BDC = -1;
+end
